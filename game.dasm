@@ -285,7 +285,7 @@ setField subroutine
 	lsr
 	lsr
 	lsr
-	sta [TEMP+2],y
+	sta (TEMP+2),y
 	iny
 	txa
 	lsr
@@ -293,17 +293,17 @@ setField subroutine
 	lsr
 	lsr
 	and #3
-	sta [TEMP+2],y
+	sta (TEMP+2),y
 	iny
 	txa
 	lsr
 	lsr
 	and #3
-	sta [TEMP+2],y
+	sta (TEMP+2),y
 	iny
 	txa
 	and #3
-	sta [TEMP+2],y
+	sta (TEMP+2),y
 
 	lda <TEMP+2
 	clc
@@ -397,11 +397,11 @@ setField subroutine
 .7
 	ldy #0
 	lda #$05
-	sta [TEMP],y
+	sta (TEMP),y
 	ldy <GAME_MAP_WDT
 	iny
 	lda #$06
-	sta [TEMP],y
+	sta (TEMP),y
 	lda <TEMP
 	clc
 	adc #32
@@ -452,7 +452,7 @@ setField subroutine
 	tay
 	lda #0
 .10
-	sta [TEMP+2],y
+	sta (TEMP+2),y
 	iny
 	dex
 	bne .10
@@ -1228,19 +1228,19 @@ showMessage subroutine
 	tay
 	ldx #0
 .fill
-	lda [TEMP],y
+	lda (TEMP),y
 	sta GAME_MAP+32*7,x
 	tya
 	clc
 	adc #16
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta GAME_MAP+32*8,x
 	tya
 	clc
 	adc #16
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta GAME_MAP+32*9,x
 	tya
 	sec
@@ -1622,7 +1622,7 @@ fuelUpdate subroutine
 	and #1
 	clc
 	adc #$2e
-	sta [GAME_FUEL_PTR],y
+	sta (GAME_FUEL_PTR),y
 	ldy <GAME_FUEL_Y
 	jsr updateTile
 .noAnim
@@ -1683,7 +1683,7 @@ fuelUpdateTime subroutine
 	adc #>(GAME_MAP)
 	sta <GAME_FUEL_NPTR+1
 	ldy #0
-	lda [GAME_FUEL_NPTR],y
+	lda (GAME_FUEL_NPTR),y
 	cmp #$0a
 	bcc .done
 	cmp #$0e
@@ -1797,7 +1797,7 @@ checkTile
 	;sta <GAME_CAM_Y
 	lda #GAME_GTYPE_NONE
 	sta <GAME_GRASS_TYPE
-	lda [GAME_TILE_ADR],y
+	lda (GAME_TILE_ADR),y
 	cmp #$0e
 	bcc .noGrass
 	cmp #$12
@@ -1829,7 +1829,7 @@ checkTile
 cutGrass subroutine
 	sec
 	sbc #4
-	sta [GAME_TILE_ADR],y
+	sta (GAME_TILE_ADR),y
 	lda <GAME_DONE
 	clc
 	adc <GAME_DONE_INC
@@ -1854,7 +1854,7 @@ cutGrass subroutine
 
 cutFlowers
 	lda #$13
-	sta [GAME_TILE_ADR],y
+	sta (GAME_TILE_ADR),y
 	lda #GAME_FUEL_MAX/6
 	jsr fuelSubtract
 	lda #GAME_GTYPE_FLOWERS
@@ -1868,7 +1868,7 @@ cutFlowersCut subroutine
 	and #3
 	clc
 	adc #$0a
-	sta [GAME_TILE_ADR],y
+	sta (GAME_TILE_ADR),y
 	lda #GAME_GTYPE_GRASS
 	sta <GAME_GRASS_TYPE
 	lda #SFX_GRASS_CUT
@@ -1893,7 +1893,7 @@ cutFuel subroutine
 	and #3
 	clc
 	adc #$0a
-	sta [GAME_FUEL_PTR],y
+	sta (GAME_FUEL_PTR),y
 	lda #GAME_FUEL_MAX
 	sta <GAME_FUEL
 	lda #SFX_FUEL_GET
@@ -2106,11 +2106,11 @@ updateTile subroutine
 
 	jsr getTileAddr	;get the tile from the map
 	ldy #0
-	lda [GAME_TILE_ADR],y
+	lda (GAME_TILE_ADR),y
 	asl
 	asl
 	clc
-	adc [GAME_TILE_ADR],y
+	adc (GAME_TILE_ADR),y
 	tax
 
 	lda #0			;get nametable address, y*64+(x&15)*2
@@ -2223,26 +2223,26 @@ putMetaSprite subroutine
 	tax
 	ldy #0
 .1
-	lda [TEMP],y
+	lda (TEMP),y
 	beq .2
 	iny
 	sta <TEMP+4
 	lda <TEMP+3
 	clc
-	adc [TEMP],y
+	adc (TEMP),y
 	iny
 	sta OAM_PAGE,x
 	inx
 	lda <TEMP+4
 	sta OAM_PAGE,x
 	inx
-	lda [TEMP],y
+	lda (TEMP),y
 	iny
 	sta OAM_PAGE,x
 	inx
 	lda <TEMP+2
 	clc
-	adc	[TEMP],y
+	adc	(TEMP),y
 	iny
 	sta OAM_PAGE,x
 	inx
@@ -2496,7 +2496,7 @@ levList
 version
 	.byte "Lawn Mower v1.12 01.07.11"
 
-;	.org $e000
+	;.org $c000
 
 	.include "bgm_title.asm"
 	.include "bgm_game.asm"

@@ -34,7 +34,7 @@ palSetup
 	tax
 	ldy #0
 .1
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PAL_DATA,x
 	iny
 	inx
@@ -89,59 +89,59 @@ palUpdate subroutine
 	
 	lda PAL_DATA,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;0
 	lda PAL_DATA+1,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;1
 .skip2spr
 	lda PAL_DATA+2,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;2
 	lda PAL_DATA+3,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;3
 	lda PPU_DATA			;skip 4
 	lda PAL_DATA+5,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;5
 	lda PAL_DATA+6,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;6
 	lda PAL_DATA+7,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;7
 	lda PPU_DATA			;skip 8
 	lda PAL_DATA+9,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;9
 	lda PAL_DATA+10,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;10
 	lda PAL_DATA+11,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;11
 	lda PPU_DATA			;skip 12
 	lda PAL_DATA+13,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;13
 	lda PAL_DATA+14,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;14
 	lda PAL_DATA+15,x
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA			;15
 
 	cpx #0
@@ -152,7 +152,7 @@ palUpdate subroutine
 	sta PPU_ADDR
 	lda PAL_DATA+1
 	tay
-	lda [TEMP],y
+	lda (TEMP),y
 	sta PPU_DATA
 .noSpr
 

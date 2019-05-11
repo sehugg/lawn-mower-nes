@@ -36,7 +36,7 @@ unrle subroutine
 	rts
 
 rle_byte subroutine
-	lda [RLE_LOW],y
+	lda (RLE_LOW),y
 	inc <RLE_LOW
 	bne .1
 	inc <RLE_HIGH
