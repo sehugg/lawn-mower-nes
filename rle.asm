@@ -8,7 +8,7 @@ RLE_TAG		equ $02
 RLE_BYTE	equ $03
 
 
-unrle
+unrle subroutine
 	stx <RLE_LOW
 	sty <RLE_HIGH
 	ldy #0
@@ -35,7 +35,7 @@ unrle
 .4
 	rts
 
-rle_byte
+rle_byte subroutine
 	lda [RLE_LOW],y
 	inc <RLE_LOW
 	bne .1

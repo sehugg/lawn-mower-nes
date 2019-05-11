@@ -9,14 +9,14 @@ PAD_RIGHT		equ $80
 
 
 
-padInit
+padInit subroutine
 	lda #0
 	sta <PAD_STATE
 	sta <PAD_STATEP
 	sta <PAD_STATET
 	rts
 
-padPoll
+padPoll subroutine
 	ldx #0
 	jsr padPollPort
 	jsr padPollPort
@@ -40,7 +40,7 @@ padPoll
 
 	rts
 
-padPollPort
+padPollPort subroutine
 	ldy #$01
 	sty CTRL_PORT1
 	dey

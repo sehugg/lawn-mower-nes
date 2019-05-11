@@ -9,12 +9,12 @@ TITLE_DELAY_BOTTOM	equ $90
 TITLE_PAL_ANIM		equ $91
 
 
-showTitle
+showTitle subroutine
 	lda #0
 	sta PPU_MASK
 
-	ldx # LOW(titleNameTable)
-	ldy #HIGH(titleNameTable)
+	ldx # <(titleNameTable)
+	ldy #>(titleNameTable)
 	lda #$20
 	sta PPU_ADDR
 	lda #$00
@@ -78,13 +78,13 @@ showTitle
 	lda #0
 	sta OAM_PAGE+3
 
-	ldx # LOW(bgm_title_module)
-	ldy #HIGH(bgm_title_module)
-	jsr FamiToneMusicStart
+	ldx # <(bgm_title_module)
+	ldy #>(bgm_title_module)
+	jsr FamiToneMusicPlay
 
 	jsr palReset
-	ldx # LOW(palTitle)
-	ldy #HIGH(palTitle)
+	ldx # <(palTitle)
+	ldy #>(palTitle)
 	jsr palSetupBackground
 	jsr palSetFadeIn
 
@@ -132,13 +132,13 @@ showTitle
 	jsr delayMiddle
 
 	lda <FRAME_CNT
-	lsr a
-	lsr a
+	lsr
+	lsr
 	ldx <TITLE_START
 	bne .fast
-	lsr a
-	lsr a
-	lsr a
+	lsr
+	lsr
+	lsr
 .fast
 	and #1
 	ora #$80
@@ -198,7 +198,7 @@ showTitle
 	bne .noPalAnim
 	lda <TITLE_PAL_ANIM
 	and #$fe
-	asl a
+	asl
 	tax
 	lda titleColorAnimation,x
 	sta PAL_DATA+2
@@ -283,7 +283,7 @@ showTitle
 	rts
 
 
-delayTop
+delayTop subroutine
 	ldy <TITLE_DELAY_TOP
 	ldx #50
 .delay0
@@ -296,7 +296,7 @@ delayTop
 	rts
 
 
-delayMiddle
+delayMiddle subroutine
 	ldx <TITLE_DELAY_MIDDLE
 .delay0
 	ldy #6
@@ -308,7 +308,7 @@ delayMiddle
 	rts
 
 
-delayBottom
+delayBottom subroutine
 	ldx <TITLE_DELAY_BOTTOM
 .delay0
 	nop
@@ -324,11 +324,11 @@ titleNameTable
 	.incbin "title.rle"
 
 titleColorAnimation
-	.db $38,$37,$26,$37
-	.db $37,$20,$27,$20
-	.db $20,$30,$37,$30
-	.db $30,$30,$30,$30
-	.db $20,$30,$37,$30
-	.db $37,$20,$27,$20
-	.db $38,$37,$26,$37
-	.db $28,$39,$16,$38
+	.byte $38,$37,$26,$37
+	.byte $37,$20,$27,$20
+	.byte $20,$30,$37,$30
+	.byte $30,$30,$30,$30
+	.byte $20,$30,$37,$30
+	.byte $37,$20,$27,$20
+	.byte $38,$37,$26,$37
+	.byte $28,$39,$16,$38

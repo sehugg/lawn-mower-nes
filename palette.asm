@@ -1,9 +1,9 @@
 PAL_FADE_NONE	equ 0
-PAL_FADE_IN		equ 1
+PAL_FADE_IN	equ 1
 PAL_FADE_OUT	equ 2
 
 
-palReset
+palReset subroutine
 	lda #$3f
 	sta PPU_ADDR
 	ldx #$00
@@ -23,7 +23,7 @@ palReset
 	rts
 
 
-palSetupBackground
+palSetupBackground subroutine
 	lda #0
 	beq palSetup
 palSetupSprites
@@ -43,19 +43,19 @@ palSetup
 	rts
 
 
-palSetFadeIn
+palSetFadeIn subroutine
 	lda #PAL_FADE_IN
 	sta <PAL_MODE
 	rts
 
 
-palSetFadeOut
+palSetFadeOut subroutine
 	lda #PAL_FADE_OUT
 	sta <PAL_MODE
 	rts
 
 
-palSetFadeHalf
+palSetFadeHalf subroutine
 	lda #PAL_FADE_NONE
 	sta <PAL_MODE
 	lda #64
@@ -63,7 +63,7 @@ palSetFadeHalf
 	rts
 
 
-palUpdate
+palUpdate subroutine
 	ldx #$00
 	ldy #$00
 	lda <FRAME_CNT
@@ -78,10 +78,10 @@ palUpdate
 
 	lda <PAL_BRIGHT
 	clc
-	adc # LOW(palBrightTable)
+	adc # <(palBrightTable)
 	sta <TEMP
 	lda #0
-	adc #HIGH(palBrightTable)
+	adc #>(palBrightTable)
 	sta <TEMP+1
 	
 	cpx #$10
@@ -187,31 +187,31 @@ palUpdate
 
 
 palBrightTable
-	.db $00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0a,$0b,$0c,$0f,$0e,$0f
-	.db $10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$1a,$1b,$1c,$1f,$1e,$1f
-	.db $20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$2a,$2b,$2c,$2d,$2e,$2f
-	.db $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3a,$3b,$3c,$3d,$3e,$3f
-	.db $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
-	.db $00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0a,$0b,$0c,$0f,$0e,$0f
-	.db $10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$1a,$1b,$1c,$1f,$1e,$1f
-	.db $20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$2a,$2b,$2c,$2d,$2e,$2f
-	.db $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
-	.db $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
-	.db $00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0a,$0b,$0c,$0f,$0e,$0f
-	.db $10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$1a,$1b,$1c,$1f,$1e,$1f
-	.db $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
-	.db $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
-	.db $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
-	.db $00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0a,$0b,$0c,$0f,$0e,$0f
+	.byte $00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0a,$0b,$0c,$0f,$0e,$0f
+	.byte $10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$1a,$1b,$1c,$1f,$1e,$1f
+	.byte $20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$2a,$2b,$2c,$2d,$2e,$2f
+	.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3a,$3b,$3c,$3d,$3e,$3f
+	.byte $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
+	.byte $00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0a,$0b,$0c,$0f,$0e,$0f
+	.byte $10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$1a,$1b,$1c,$1f,$1e,$1f
+	.byte $20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$2a,$2b,$2c,$2d,$2e,$2f
+	.byte $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
+	.byte $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
+	.byte $00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0a,$0b,$0c,$0f,$0e,$0f
+	.byte $10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$1a,$1b,$1c,$1f,$1e,$1f
+	.byte $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
+	.byte $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
+	.byte $0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f,$0f
+	.byte $00,$01,$02,$03,$04,$05,$06,$07,$08,$09,$0a,$0b,$0c,$0f,$0e,$0f
 
 palTitle
-	.db $0f,$0b,$28,$39,$0f,$0b,$16,$38,$0f,$0b,$1a,$29,$0f,$0b,$29,$30
+	.byte $0f,$0b,$28,$39,$0f,$0b,$16,$38,$0f,$0b,$1a,$29,$0f,$0b,$29,$30
 
 palGameSprites
-	.db $0f,$11,$27,$20,$0f,$2a,$39,$16,$0f,$06,$27,$37,$0f,$0f,$00,$30
+	.byte $0f,$11,$27,$20,$0f,$2a,$39,$16,$0f,$06,$27,$37,$0f,$0f,$00,$30
 
 palGame
-	.db $0f,$11,$21,$30,$0f,$0a,$38,$25,$0f,$0a,$1a,$29,$0f,$0a,$10,$20
+	.byte $0f,$11,$21,$30,$0f,$0a,$38,$25,$0f,$0a,$1a,$29,$0f,$0a,$10,$20
 
 palDone
-	.db $0f,$0a,$34,$17,$0f,$0a,$37,$27,$0f,$0a,$1a,$29,$0f,$0a,$37,$22
+	.byte $0f,$0a,$34,$17,$0f,$0a,$37,$27,$0f,$0a,$1a,$29,$0f,$0a,$37,$22
