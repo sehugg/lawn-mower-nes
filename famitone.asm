@@ -80,26 +80,26 @@ FT_CHN_REF_LEN		equ FT_BASE_ADR+8
 
 ;aliases for outputs
 
-FT_CH1_NOTE			equ FT_CH1_VARS+LOW(FT_CHN_NOTE)
-FT_CH2_NOTE			equ FT_CH2_VARS+LOW(FT_CHN_NOTE)
-FT_CH3_NOTE			equ FT_CH3_VARS+LOW(FT_CHN_NOTE)
-FT_CH4_NOTE			equ FT_CH4_VARS+LOW(FT_CHN_NOTE)
-FT_CH5_NOTE			equ FT_CH5_VARS+LOW(FT_CHN_NOTE)
-FT_CH1_VOLUME		equ FT_CH1_ENVS+LOW(FT_ENV_VALUE)
-FT_CH2_VOLUME		equ FT_CH2_ENVS+LOW(FT_ENV_VALUE)
-FT_CH3_VOLUME		equ FT_CH3_ENVS+LOW(FT_ENV_VALUE)
-FT_CH4_VOLUME		equ FT_CH4_ENVS+LOW(FT_ENV_VALUE)
-FT_CH1_NOTE_OFF		equ FT_CH1_ENVS+LOW(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE
-FT_CH2_NOTE_OFF		equ FT_CH2_ENVS+LOW(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE
-FT_CH3_NOTE_OFF		equ FT_CH3_ENVS+LOW(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE
-FT_CH4_NOTE_OFF		equ FT_CH4_ENVS+LOW(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE
-FT_CH1_PITCH_OFF	equ FT_CH1_ENVS+LOW(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE*2
-FT_CH2_PITCH_OFF	equ FT_CH2_ENVS+LOW(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE*2
-FT_CH3_PITCH_OFF	equ FT_CH3_ENVS+LOW(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE*2
-FT_CH1_DUTY			equ FT_CH1_VARS+LOW(FT_CHN_DUTY)
-FT_CH2_DUTY			equ FT_CH2_VARS+LOW(FT_CHN_DUTY)
-FT_CH3_DUTY			equ FT_CH3_VARS+LOW(FT_CHN_DUTY)
-FT_CH4_DUTY			equ FT_CH4_VARS+LOW(FT_CHN_DUTY)
+FT_CH1_NOTE			equ FT_CH1_VARS+<(FT_CHN_NOTE)
+FT_CH2_NOTE			equ FT_CH2_VARS+<(FT_CHN_NOTE)
+FT_CH3_NOTE			equ FT_CH3_VARS+<(FT_CHN_NOTE)
+FT_CH4_NOTE			equ FT_CH4_VARS+<(FT_CHN_NOTE)
+FT_CH5_NOTE			equ FT_CH5_VARS+<(FT_CHN_NOTE)
+FT_CH1_VOLUME		equ FT_CH1_ENVS+<(FT_ENV_VALUE)
+FT_CH2_VOLUME		equ FT_CH2_ENVS+<(FT_ENV_VALUE)
+FT_CH3_VOLUME		equ FT_CH3_ENVS+<(FT_ENV_VALUE)
+FT_CH4_VOLUME		equ FT_CH4_ENVS+<(FT_ENV_VALUE)
+FT_CH1_NOTE_OFF		equ FT_CH1_ENVS+<(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE
+FT_CH2_NOTE_OFF		equ FT_CH2_ENVS+<(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE
+FT_CH3_NOTE_OFF		equ FT_CH3_ENVS+<(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE
+FT_CH4_NOTE_OFF		equ FT_CH4_ENVS+<(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE
+FT_CH1_PITCH_OFF	equ FT_CH1_ENVS+<(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE*2
+FT_CH2_PITCH_OFF	equ FT_CH2_ENVS+<(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE*2
+FT_CH3_PITCH_OFF	equ FT_CH3_ENVS+<(FT_ENV_VALUE)+FT_ENV_STRUCT_SIZE*2
+FT_CH1_DUTY			equ FT_CH1_VARS+<(FT_CHN_DUTY)
+FT_CH2_DUTY			equ FT_CH2_VARS+<(FT_CHN_DUTY)
+FT_CH3_DUTY			equ FT_CH3_VARS+<(FT_CHN_DUTY)
+FT_CH4_DUTY			equ FT_CH4_VARS+<(FT_CHN_DUTY)
 
 ;output buffer, used then sound effects are enabled
 
@@ -107,7 +107,7 @@ FT_OUT_BUF			equ FT_BASE_ADR+112	;11 bytes
 
 ;aliases for APU registers for music FamiTone
 
-	.ifndef FT_SFX_ENABLE			;if sound effects are disabled, just write to APU
+	IFNCONST FT_SFX_ENABLE			;if sound effects are disabled, just write to APU
 FT_MR_PULSE1_V		equ APU_PL1_VOL
 FT_MR_PULSE1_L		equ APU_PL1_LO
 FT_MR_PULSE1_H		equ APU_PL1_HI
@@ -156,7 +156,7 @@ FT_SFX_CH3			equ FT_SFX_STRUCT_SIZE*3
 ;reset APU, initialize FamiTone
 ;in: A 0 for PAL, not 0 for NTSC
 
-FamiToneInit
+FamiToneInit subroutine
 	cmp #0
 	beq .pal
 	lda #$ff
@@ -185,9 +185,9 @@ FamiToneInit
 
 ;stop music that currently plays (it is a part of FamiToneInit as well)
 
-FamiToneMusicStop
+FamiToneMusicStop subroutine
 	ldy #0					;reset all the channels variables
-	ldx #LOW(FT_CHANNELS)
+	ldx #<(FT_CHANNELS)
 	lda #5
 	sta FT_TEMP+2
 .setChannels
@@ -223,7 +223,7 @@ FamiToneMusicStop
 ;start playing a music
 ;in: X,Y address of the module (LSB,MSB)
 
-FamiToneMusicStart
+FamiToneMusicPlay subroutine
 	stx <FT_TEMP
 	sty <FT_TEMP+1
 	
@@ -235,14 +235,14 @@ FamiToneMusicStart
 .noSetAdjust
 
 	ldy #0
-	ldx #LOW(FT_CHANNELS)
+	ldx #<(FT_CHANNELS)
 	lda #5
 	sta FT_TEMP+2
 .setChannels
-	lda [FT_TEMP],y
+	lda (FT_TEMP),y
 	sta FT_CHN_PTR_L,x
 	iny
-	lda [FT_TEMP],y
+	lda (FT_TEMP),y
 	sta FT_CHN_PTR_H,x
 	iny
 
@@ -262,21 +262,21 @@ FamiToneMusicStart
 	dec <FT_TEMP+2
 	bne .setChannels
 
-	lda [FT_TEMP],y
+	lda (FT_TEMP),y
 	iny
 	sta FT_INSTRUMENT_L
-	lda [FT_TEMP],y
+	lda (FT_TEMP),y
 	iny
 	sta FT_INSTRUMENT_H
 
-	lda [FT_TEMP],y
+	lda (FT_TEMP),y
 	sta FT_SONG_SPEED
 	lda #0
 	sta FT_FRAME_CNT
 
 	lda #4
 	sta <FT_TEMP+6
-	ldx #LOW(FT_ENVELOPES)
+	ldx #<(FT_ENVELOPES)
 .setEnvelopes
 	txa
 	pha
@@ -295,7 +295,7 @@ FamiToneMusicStart
 ;pause and unpause current music
 ;in: A 0 or not 0 to play or pause
 
-FamiToneMusicPause
+FamiToneMusicPause subroutine
 	tax
 	lda FT_SONG_SPEED
 	cpx #0
@@ -311,7 +311,7 @@ FamiToneMusicPause
 	
 ;update FamiTone state, should be called every TV frame
 
-FamiToneUpdate
+FamiToneUpdate subroutine
 	ldx FT_PAL_ADJUST			;for PAL mode count 0..4
 	bmi .noAdjust
 	inx
@@ -329,9 +329,9 @@ FamiToneUpdate
 	lda FT_FRAME_CNT			;check TV frame counter
 	bne .noRow					;if it is non-zero, it is a middle of a row
 
-	lda #LOW(FT_CHANNELS)		;start of a row, updating all the channels
+	lda #<(FT_CHANNELS)		;start of a row, updating all the channels
 	sta <FT_TEMP+4
-	lda #LOW(FT_ENVELOPES)
+	lda #<(FT_ENVELOPES)
 	sta <FT_TEMP+5
 	lda #4						;process pulse, triangle, and noise channels
 	sta <FT_TEMP+6
@@ -358,12 +358,12 @@ FamiToneUpdate
 	dec <FT_TEMP+6
 	bne .processChns
 
-	ldx #LOW(FT_CH5_VARS)		;hack to process Fxx in separate channel
+	ldx #<(FT_CH5_VARS)		;hack to process Fxx in separate channel
 	jsr channelStep				;other DPCM code is excluded
 
-	.ifdef FT_DPCM_ENABLE
+	IFNCONST FT_DPCM_ENABLE
 
-	ldx #LOW(FT_CH5_VARS)
+	ldx #<(FT_CH5_VARS)
 	jsr channelStep
 	bcs .ch5done
 	cmp #63
@@ -383,7 +383,7 @@ FamiToneUpdate
 .noRow
 	lda #11						;now process all the envelopes (11 because noise has no pitch)
 	sta <FT_TEMP+2
-	ldx #LOW(FT_ENVELOPES)
+	ldx #<(FT_ENVELOPES)
 .processEnvs
 	txa
 	pha
@@ -418,7 +418,7 @@ FamiToneUpdate
 .ch1note
 	clc
 	adc FT_CH1_NOTE_OFF
-	asl a
+	asl
 	tax
 	lda FT_CH1_PITCH_OFF
 	pha
@@ -431,7 +431,7 @@ FamiToneUpdate
 .ch1sign
 	adc noteTable+1,x
 
-	.ifndef FT_SFX_ENABLE
+	IFNCONST FT_SFX_ENABLE
 	cmp FT_PULSE1_PREV
 	beq .ch1prev
 	sta FT_PULSE1_PREV
@@ -452,7 +452,7 @@ FamiToneUpdate
 .ch2note
 	clc
 	adc FT_CH2_NOTE_OFF
-	asl a
+	asl
 	tax
 	lda FT_CH2_PITCH_OFF
 	pha
@@ -465,7 +465,7 @@ FamiToneUpdate
 .ch2sign
 	adc noteTable+1,x
 
-	.ifndef FT_SFX_ENABLE
+	IFNCONST FT_SFX_ENABLE
 	cmp FT_PULSE2_PREV
 	beq .ch2prev
 	sta FT_PULSE2_PREV
@@ -486,7 +486,7 @@ FamiToneUpdate
 .ch3note
 	clc
 	adc FT_CH3_NOTE_OFF
-	asl a
+	asl
 	tax
 	lda FT_CH3_PITCH_OFF
 	pha
@@ -516,7 +516,7 @@ FamiToneUpdate
 	eor #$0f
 	sta <FT_TEMP
 	lda FT_CH4_DUTY
-	asl a
+	asl
 	and #$80
 	ora <FT_TEMP
 	sta FT_MR_NOISE_F
@@ -531,7 +531,7 @@ FamiToneUpdate
 	dec FT_FRAME_CNT
 .noSkipM
 
-	.ifndef FT_SFX_ENABLE
+	IFNCONST FT_SFX_ENABLE
 
 	rts
 
@@ -592,10 +592,10 @@ FamiToneUpdate
 ;     X is offset of block of envelopes in the FamiTone's RAM page
 ;out: Y 0
 
-setInstrument
-	asl a					;A*8, every instrument takes 8 bytes
-	asl a
-	asl a
+setInstrument subroutine
+	asl					;A*8, every instrument takes 8 bytes
+	asl
+	asl
 	clc
 	adc FT_INSTRUMENT_L		;get instrument address into FT_TEMP
 	sta <FT_TEMP
@@ -604,7 +604,7 @@ setInstrument
 	sta <FT_TEMP+1
 
 	lda #3					;three envelopes for pulse and triangle channels
-	cpx #LOW(FT_CH4_ENVS)
+	cpx #<(FT_CH4_ENVS)
 	bne .noNoise
 	lda #2					;only two envelopes for noise, no pitch
 .noNoise
@@ -613,10 +613,10 @@ setInstrument
 	ldy #0
 	clc
 .loop
-	lda [FT_TEMP],y			;get LSB of an envelope
+	lda (FT_TEMP),y			;get LSB of an envelope
 	sta FT_ENV_ADR_L,x
 	iny
-	lda [FT_TEMP],y			;get MSB
+	lda (FT_TEMP),y			;get MSB
 	sta FT_ENV_ADR_H,x
 	iny
 	lda #0
@@ -629,7 +629,7 @@ setInstrument
 	bne .loop
 
 	ldy #6
-	lda [FT_TEMP],y			;duty cycle
+	lda (FT_TEMP),y			;duty cycle
 	ldy #0
 	rts
 
@@ -640,7 +640,7 @@ setInstrument
 ;     Y 0
 ;out: Carry is reset if the was new note
 
-channelStep
+channelStep subroutine
 	lda FT_CHN_REF_LEN,x	;check reference rows counter
 	beq .noRef				;if it is zero, there is no reference
 	dec FT_CHN_REF_LEN,x	;decrease rows counter
@@ -664,7 +664,7 @@ channelStep
 .noRepeatR
 
 .readByte
-	lda [FT_TEMP],y			;read byte of the channel
+	lda (FT_TEMP),y			;read byte of the channel
 	inc <FT_TEMP			;increase pointer
 	bne .1
 	inc <FT_TEMP+1
@@ -704,13 +704,13 @@ channelStep
 	lda <FT_TEMP+1
 	adc #0
 	sta FT_CHN_RETURN_H,x
-	lda [FT_TEMP],y			;read length of the reference (how many rows)
+	lda (FT_TEMP),y			;read length of the reference (how many rows)
 	sta FT_CHN_REF_LEN,x
 	iny
-	lda [FT_TEMP],y			;read 16-bit absolute address of the reference
+	lda (FT_TEMP),y			;read 16-bit absolute address of the reference
 	sta <FT_TEMP+2			;remember in temp
 	iny
-	lda [FT_TEMP],y
+	lda (FT_TEMP),y
 	sta <FT_TEMP+1
 	lda <FT_TEMP+2
 	sta <FT_TEMP
@@ -720,10 +720,10 @@ channelStep
 .noEof
 	cmp #%11111110			;check if it is end of the channel
 	bne .effect
-	lda [FT_TEMP],y			;read two next bytes
+	lda (FT_TEMP),y			;read two next bytes
 	sta <FT_TEMP+2
 	iny
-	lda [FT_TEMP],y
+	lda (FT_TEMP),y
 	dey
 	sta <FT_TEMP+1			;and set current pointer
 	lda <FT_TEMP+2
@@ -741,7 +741,7 @@ channelStep
 ;it does not matter which type an envelope is
 ;in:  X offset of the envelope variables in the FamiTone's RAM page
 
-envelopeStep
+envelopeStep subroutine
 	lda FT_ENV_REPEAT,x		;check envelope repeat counter
 	beq .noRepeat			;if it is zero, process the envelope
 	dec FT_ENV_REPEAT,x		;otherwise decrement the counter
@@ -754,7 +754,7 @@ envelopeStep
 	ldy FT_ENV_PTR,x		;load envelope pointer
 
 .readByte
-	lda [FT_TEMP],y			;read byte of the envelope
+	lda (FT_TEMP),y			;read byte of the envelope
 	iny						;increase pointer
 	ora #0
 	bpl .special			;if it is below 127, it is special code
@@ -772,17 +772,17 @@ envelopeStep
 	sta FT_ENV_PTR,x		;remember the value and return
 	rts
 .loop
-	lda [FT_TEMP],y			;load loop pointer
+	lda (FT_TEMP),y			;load loop pointer
 	tay
 	jmp .readByte			;and read next byte
 
 
-	.ifdef FT_DPCM_ENABLE
+	IFCONST FT_DPCM_ENABLE
 
 ;set sample table pointer, only needed if DMC is used
 ;in: X,Y is address of a table that holds parameters for 12 samples
 
-FamiToneSampleInit
+FamiToneSampleInit subroutine
 	stx FT_DPCM_TABLE_L
 	sty FT_DPCM_TABLE_H
 	rts
@@ -791,7 +791,7 @@ FamiToneSampleInit
 
 ;stop DMC sample if it plays
 
-FamiToneSampleStop
+FamiToneSampleStop subroutine
 	lda #%00001111
 	sta APU_SND_CHN
 	rts
@@ -819,8 +819,8 @@ FamiToneSampleStart		;for sound effects (high priority)
 	stx FT_DPCM_EFFECT
 
 FamiToneSampleStartS
-	asl a				;get address in sample table
-	asl a
+	asl				;get address in sample table
+	asl
 	adc FT_DPCM_TABLE_L
 	sta <FT_TEMP
 	lda #0
@@ -831,13 +831,13 @@ FamiToneSampleStartS
 	sta APU_SND_CHN
 
 	ldy #0
-	lda [FT_TEMP],y		;sample offset
+	lda (FT_TEMP),y		;sample offset
 	sta APU_DMC_START
 	iny
-	lda [FT_TEMP],y		;sample length
+	lda (FT_TEMP),y		;sample length
 	sta APU_DMC_LEN
 	iny
-	lda [FT_TEMP],y		;pitch and loop
+	lda (FT_TEMP),y		;pitch and loop
 	sta APU_DMC_FREQ
 
 	lda #32				;reset DAC counter
@@ -847,16 +847,16 @@ FamiToneSampleStartS
 
 	rts
 
-	.endif
+	ENDIF
 
 
 
-	.ifdef FT_SFX_ENABLE
+	IFCONST FT_SFX_ENABLE
 
 ;init sound effects player, set pointer to data
 ;in: X,Y is address of sound effects data
 
-FamiToneSfxInit
+FamiToneSfxInit subroutine
 	stx FT_SFX_ADR_L		;remember pointer to the data
 	sty FT_SFX_ADR_H
 	ldx #FT_SFX_CH0			;init all the streams
@@ -883,17 +883,17 @@ FamiToneSfxInit
 ;in: A is a number of the sound effect
 ;    X is offset of sound effect stream, should be FT_SFX_CH0..FT_SFX_CH3
 
-FamiToneSfxStart
-	asl a					;get address in effects list
+FamiToneSfxPlay subroutine
+	asl					;get address in effects list
 	tay
 	lda FT_SFX_ADR_L
 	sta <FT_TEMP
 	lda FT_SFX_ADR_H
 	sta <FT_TEMP+1
-	lda [FT_TEMP],y			;read effect pointer from the table
+	lda (FT_TEMP),y			;read effect pointer from the table
 	sta FT_SFX_PTR_L,x		;and remember it
 	iny
-	lda [FT_TEMP],y
+	lda (FT_TEMP),y
 	sta FT_SFX_PTR_H,x
 	lda #0
 	sta FT_SFX_REPEAT,x		;reset repeat counter and pointer offset
@@ -935,7 +935,7 @@ FamiToneSfxUpdate
 	sta <FT_TEMP
 	ldy FT_SFX_OFF,x
 .readByte
-	lda [FT_TEMP],y			;read byte of effect
+	lda (FT_TEMP),y			;read byte of effect
 	iny
 	cmp #$10				;if it is less than $10, it is register write
 	bcc .getData
@@ -954,7 +954,7 @@ FamiToneSfxUpdate
 	stx <FT_TEMP+2			;it is register write
 	adc <FT_TEMP+2			;get offset in the effect output buffer
 	tax
-	lda [FT_TEMP],y			;read value
+	lda (FT_TEMP),y			;read value
 	iny
 	sta FT_SFX_BUF,x		;store into output buffer
 	ldx <FT_TEMP+2
@@ -1016,9 +1016,9 @@ FamiToneSfxUpdate
 
 
 noteTable	;NTSC, 11-bit dividers, octaves 1-5
-	.dw $6ad,$64d,$5f2,$59d,$54c,$500,$4b8,$474,$434,$3f7,$3be,$388
-	.dw $356,$326,$2f8,$2ce,$2a5,$27f,$25b,$239,$219,$1fb,$1de,$1c3
-	.dw $1aa,$192,$17b,$166,$152,$13f,$12d,$11c,$10c,$0fd,$0ee,$0e1
-	.dw $0d4,$0c8,$0bd,$0b2,$0a8,$09f,$096,$08d,$085,$07e,$076,$070
-	.dw $069,$063,$05e,$058,$053,$04f,$04a,$046,$042,$03e,$03a,$037
-	.dw 0,0,0,0
+	.word $6ad,$64d,$5f2,$59d,$54c,$500,$4b8,$474,$434,$3f7,$3be,$388
+	.word $356,$326,$2f8,$2ce,$2a5,$27f,$25b,$239,$219,$1fb,$1de,$1c3
+	.word $1aa,$192,$17b,$166,$152,$13f,$12d,$11c,$10c,$0fd,$0ee,$0e1
+	.word $0d4,$0c8,$0bd,$0b2,$0a8,$09f,$096,$08d,$085,$07e,$076,$070
+	.word $069,$063,$05e,$058,$053,$04f,$04a,$046,$042,$03e,$03a,$037
+	.word 0,0,0,0
