@@ -1,7 +1,6 @@
 ;Lawn Mower NES game
 ;by Shiru (shiru@mail.ru) 05'11
-;converted to run on @8bitworkshop
-;Compile with DASM
+;Compile with NESASM3
 ;The game and its source code are released into Public Domain
 
 	.include "nesdefs.dasm"
