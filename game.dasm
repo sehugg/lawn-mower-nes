@@ -2462,7 +2462,7 @@ nmiEmpty subroutine
 	.include "palette.asm"
 	.include "rle.asm"
 	.include "famitone.asm"
-        ;resource "title.rle"
+        ;#resource "title.rle"
 	.include "title.asm"
 	.include "bgm_instruments.asm"
 	.include "bgm_levelclear.asm"
